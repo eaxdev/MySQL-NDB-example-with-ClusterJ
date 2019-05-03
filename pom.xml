@@ -11,7 +11,7 @@
     <groupId>ru.ndb.testcontainers</groupId>
     <artifactId>ndb-testcontainers</artifactId>
     <version>1.0</version>
-    <name>ndb-testcontainers</name>
+    <name>MySQL NDB with TestContainers</name>
     <description>Example for using MySQL NDB Cluster for test with TestContainers</description>
 
     <properties>
