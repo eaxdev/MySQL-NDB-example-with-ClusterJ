@@ -39,6 +39,16 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.mysql.ndb</groupId>
+            <artifactId>clusterj</artifactId>
+            <version>7.6.9</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -54,3 +64,4 @@
         </plugins>
     </build>
 </project>
+
