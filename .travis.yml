@@ -1,0 +1,23 @@
+dist: xenial
+
+sudo:
+  required
+
+before_install:
+  - wget https://dev.mysql.com/get/Downloads/MySQL-Cluster-7.6/mysql-cluster-community-java_7.6.10-1ubuntu16.04_amd64.deb
+  - sudo dpkg -i mysql-cluster-community-java_7.6.10-1ubuntu16.04_amd64.deb
+  - mvn install:install-file -DgroupId=com.mysql.ndb -DartifactId=clusterj -Dversion=7.6.9 -Dpackaging=jar -Dfile=/usr/share/mysql/java/clusterj-7.6.9.jar -DgeneratePom=true
+  - wget https://dev.mysql.com/get/Downloads/MySQL-Cluster-7.6/ndbclient_7.6.10-1ubuntu16.04_amd64.deb
+  - sudo dpkg -i ndbclient_7.6.10-1ubuntu16.04_amd64.deb
+  - sudo ln -s /usr/lib/x86_64-linux-gnu/libndbclient.so.6.1.0 /usr/lib/x86_64-linux-gnu/libndbclient.so
+
+services:
+  - docker
+
+language: java
+jdk: openjdk11
+
+script: mvn -DargLine="-Djava.library.path=/usr/lib/x86_64-linux-gnu/" clean test
+notifications:
+  email:
+    - eaxdev@ya.ru
