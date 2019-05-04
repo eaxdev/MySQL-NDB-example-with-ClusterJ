@@ -3,7 +3,14 @@ dist: xenial
 sudo:
   required
 
+env:
+  - DOCKER_COMPOSE_VERSION=1.24.0
+
 before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
   - wget https://dev.mysql.com/get/Downloads/MySQL-Cluster-7.6/mysql-cluster-community-java_7.6.9-1ubuntu16.04_amd64.deb
   - sudo dpkg -i mysql-cluster-community-java_7.6.9-1ubuntu16.04_amd64.deb
   - mvn install:install-file -DgroupId=com.mysql.ndb -DartifactId=clusterj -Dversion=7.6.9 -Dpackaging=jar -Dfile=/usr/share/mysql/java/clusterj-7.6.9.jar -DgeneratePom=true
