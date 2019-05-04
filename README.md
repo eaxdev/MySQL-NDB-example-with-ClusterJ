@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/eaxdev/MySQL-NDB-with-TestContainers.svg?branch=master)](https://travis-ci.com/eaxdev/MySQL-NDB-with-TestContainers)
+
 # MySQL-NDB-with-TestContainers
 Example for using MySQL NDB Cluster for test with TestContainers
 
