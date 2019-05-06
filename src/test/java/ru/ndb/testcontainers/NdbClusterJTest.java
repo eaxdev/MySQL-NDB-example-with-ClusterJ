@@ -42,8 +42,6 @@ public class NdbClusterJTest {
 
     private static final int MYSQL_PORT = 3306;
 
-    private static final String DATABASE_NAME = "NDB_DB";
-
     @ClassRule
     public static DockerComposeContainer compose =
             new DockerComposeContainer(
@@ -62,11 +60,9 @@ public class NdbClusterJTest {
 
     @Test
     public void shouldGetUserViaClusterJ() {
-        String address = compose.getServiceHost(MANAGEMENT_NODE_SERVICE_NAME, CLUSTERJ_NDB_PORT) + ":" +
-                compose.getServicePort(MANAGEMENT_NODE_SERVICE_NAME, CLUSTERJ_NDB_PORT);
         Properties props = new Properties();
 
-        props.put("com.mysql.clusterj.connectstring", address);
+        props.put("com.mysql.clusterj.connectstring", "192.168.0.2:1186");
         props.put("com.mysql.clusterj.database", "NDB_DB");
 
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
@@ -89,14 +85,11 @@ public class NdbClusterJTest {
     @TestConfiguration
     public static class DataSourceConfig {
 
-        private final String url = compose.getServiceHost(MYSQL_NODE_SERVICE_NAME, MYSQL_PORT) + ":" +
-                compose.getServicePort(MYSQL_NODE_SERVICE_NAME, MYSQL_PORT) + "/" + DATABASE_NAME;
-
         @Bean
         public DataSource dataSource() {
             SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSource.setUrl("jdbc:mysql://" + url + "?useSSL=false");
+            dataSource.setUrl("jdbc:mysql://192.168.0.10:3306/NDB_DB?useSSL=false");
             dataSource.setUsername("sys");
             dataSource.setPassword("qwerty");
             dataSource.setSuppressClose(true);

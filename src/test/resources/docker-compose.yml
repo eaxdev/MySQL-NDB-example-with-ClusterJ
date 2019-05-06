@@ -6,6 +6,8 @@ services:
   ndb_mgmd:
     image: mysql/mysql-cluster
     command: 'ndb_mgmd'
+    ports:
+      - "1186"
     volumes:
       - ./mysql-cluster.cnf:/etc/mysql-cluster.cnf
     networks:
@@ -34,6 +36,8 @@ services:
   ndb_mysqld:
     image: mysql/mysql-cluster
     command: 'mysqld'
+    ports:
+      - "3306"
     environment:
       - MYSQL_DATABASE=NDB_DB
       - MYSQL_USER=sys
