@@ -4,7 +4,6 @@ import com.mysql.clusterj.ClusterJHelper;
 import com.mysql.clusterj.Session;
 import com.mysql.clusterj.SessionFactory;
 import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.testcontainers.containers.DockerComposeContainer;
 import ru.ndb.testcontainers.model.User;
 
 import javax.sql.DataSource;
-import java.io.File;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
@@ -27,29 +24,12 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
-public class NdbClusterJTest {
+public class NdbClusterJTest extends AbstractIntegrationTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     //-Djava.library.path=/usr/lib/x86_64-linux-gnu/
-
-    private static final String MANAGEMENT_NODE_SERVICE_NAME = "ndb_mgmd";
-
-    private static final int CLUSTERJ_NDB_PORT = 1186;
-
-    private static final String MYSQL_NODE_SERVICE_NAME = "ndb_mysqld";
-
-    private static final int MYSQL_PORT = 3306;
-
-    @ClassRule
-    public static DockerComposeContainer compose =
-            new DockerComposeContainer(
-                    new File("src/test/resources/docker-compose.yml"))
-                    .withLocalCompose(true)
-                    .withExposedService(MANAGEMENT_NODE_SERVICE_NAME, CLUSTERJ_NDB_PORT)
-                    .withExposedService(MYSQL_NODE_SERVICE_NAME, MYSQL_PORT);
-
 
     @Before
     public void setUp() {

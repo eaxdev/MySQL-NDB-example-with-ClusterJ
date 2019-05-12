@@ -1,6 +1,6 @@
 # MAINTAINER Roman S.A. <eaxdev@ya.ru>
 
-version: "3"
+version: "3.7"
 
 services:
   ndb_mgmd:
