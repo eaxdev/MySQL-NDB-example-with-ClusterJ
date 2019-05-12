@@ -40,9 +40,11 @@ public class NdbClusterJTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldGetUserViaClusterJ() {
+        Integer mappedPort = ndbMgmd.getMappedPort(1186);
+        String containerIpAddress = ndbMgmd.getContainerIpAddress();
         Properties props = new Properties();
 
-        props.put("com.mysql.clusterj.connectstring", "192.168.0.2:1186");
+        props.put("com.mysql.clusterj.connectstring", containerIpAddress + ":" + mappedPort);
         props.put("com.mysql.clusterj.database", "NDB_DB");
 
         SessionFactory factory = ClusterJHelper.getSessionFactory(props);
@@ -67,9 +69,11 @@ public class NdbClusterJTest extends AbstractIntegrationTest {
 
         @Bean
         public DataSource dataSource() {
+            Integer mappedPort = ndbMysqld.getMappedPort(3306);
+            String containerIpAddress = ndbMysqld.getContainerIpAddress();
             SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
             dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            dataSource.setUrl("jdbc:mysql://192.168.0.10:3306/NDB_DB?useSSL=false");
+            dataSource.setUrl("jdbc:mysql://" + containerIpAddress + ":" + mappedPort + "/NDB_DB?useSSL=false");
             dataSource.setUsername("sys");
             dataSource.setPassword("qwerty");
             dataSource.setSuppressClose(true);
