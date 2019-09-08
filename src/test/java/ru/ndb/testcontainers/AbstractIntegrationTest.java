@@ -6,11 +6,12 @@ import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
-import java.util.Map;
+import java.time.Duration;
 import java.util.stream.Stream;
 
-public abstract class AbstractIntegrationTest {
+abstract class AbstractIntegrationTest {
 
     private static Ipam getIpam() {
         Ipam ipam = new Ipam();
@@ -36,7 +37,7 @@ public abstract class AbstractIntegrationTest {
             .withCreateContainerCmdModifier(createContainerCmd -> createContainerCmd.withIpv4Address("192.168.0.2"))
             .withCommand("ndb_mgmd")
             .withExposedPorts(1186)
-            .waitingFor(Wait.forLogMessage(".*MySQL Cluster Management Server mysql-5.7.25 ndb-7.6.9 started.*", 1));
+            .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(150)));
 
     private static GenericContainer ndbd1 = new GenericContainer<>("mysql/mysql-cluster")
             .withNetwork(network)
@@ -60,7 +61,7 @@ public abstract class AbstractIntegrationTest {
                     "/etc/my.cnf",
                     BindMode.READ_ONLY)
             .waitingFor(Wait.forListeningPort())
-            .withEnv(Map.of("MYSQL_DATABASE", "NDB_DB",
+            .withEnv(ImmutableMap.of("MYSQL_DATABASE", "NDB_DB",
                     "MYSQL_USER", "sys",
                     "MYSQL_PASSWORD", "qwerty"))
             .withExposedPorts(3306)

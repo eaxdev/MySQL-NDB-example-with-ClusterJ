@@ -3,9 +3,9 @@ package ru.ndb.testcontainers;
 import com.mysql.clusterj.ClusterJHelper;
 import com.mysql.clusterj.Session;
 import com.mysql.clusterj.SessionFactory;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,16 +13,18 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.ndb.testcontainers.model.User;
 
 import javax.sql.DataSource;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
 public class NdbClusterJTest extends AbstractIntegrationTest {
 
@@ -31,15 +33,15 @@ public class NdbClusterJTest extends AbstractIntegrationTest {
 
     //-Djava.library.path=/usr/lib/x86_64-linux-gnu/
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS `user` (id INT NOT NULL PRIMARY KEY," +
                 "     firstName VARCHAR(64) DEFAULT NULL," +
                 "     lastName VARCHAR(64) DEFAULT NULL) ENGINE=NDBCLUSTER;");
     }
 
     @Test
-    public void shouldGetUserViaClusterJ() {
+    void shouldGetUserViaClusterJ() {
         Integer mappedPort = ndbMgmd.getMappedPort(1186);
         String containerIpAddress = ndbMgmd.getContainerIpAddress();
         Properties props = new Properties();
@@ -59,9 +61,10 @@ public class NdbClusterJTest extends AbstractIntegrationTest {
 
         User userFromDb = session.find(User.class, 1);
 
-        assertEquals(userFromDb.getId(), 1);
-        assertEquals(userFromDb.getFirstName(), "John");
-        assertEquals(userFromDb.getLastName(), "Jonson");
+        assertAll(
+                () -> assertEquals(userFromDb.getId(), 1),
+                () -> assertEquals(userFromDb.getFirstName(), "John"),
+                () -> assertEquals(userFromDb.getLastName(), "Jonson"));
     }
 
     @TestConfiguration
