@@ -1,32 +1,37 @@
-package ru.ndb.testcontainers;
+package ru.ndb.testcontainers.junit5;
 
-import com.github.dockerjava.api.model.Network.Ipam;
-import com.github.dockerjava.api.model.Network.Ipam.Config;
+import com.github.dockerjava.api.model.Network;
+import org.junit.jupiter.api.extension.Extension;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import java.time.Duration;
 import java.util.stream.Stream;
 
-abstract class AbstractIntegrationTest {
+class MySQLClusterTcExtension implements Extension {
 
-    private static Ipam getIpam() {
-        Ipam ipam = new Ipam();
+    private static final String MYSQL_USER = "sys";
+
+    private static final String MYSQL_PASSWORD = "qwerty";
+
+    private static final String CLUSTERJ_DATABASE = "NDB_DB";
+
+    private static Network.Ipam getIpam() {
+        Network.Ipam ipam = new Network.Ipam();
         ipam.withDriver("default");
-        Config config = new Config();
+        Network.Ipam.Config config = new Network.Ipam.Config();
         config.withSubnet("192.168.0.0/16");
         ipam.withConfig(config);
         return ipam;
     }
 
-    private static Network network = Network.builder()
+    private static org.testcontainers.containers.Network network = org.testcontainers.containers.Network.builder()
             .createNetworkCmdModifier(createNetworkCmd -> createNetworkCmd.withIpam(getIpam()))
             .build();
 
-    static GenericContainer ndbMgmd = new GenericContainer<>("mysql/mysql-cluster")
+    private static GenericContainer ndbMgmd = new GenericContainer<>("mysql/mysql-cluster")
             .withNetwork(network)
             .withClasspathResourceMapping("mysql-cluster.cnf",
                     "/etc/mysql-cluster.cnf",
@@ -50,7 +55,7 @@ abstract class AbstractIntegrationTest {
             .withCreateContainerCmdModifier(createContainerCmd -> createContainerCmd.withIpv4Address("192.168.0.3"))
             .withCommand("ndbd");
 
-    static GenericContainer ndbMysqld = new GenericContainer<>("mysql/mysql-cluster")
+    private static GenericContainer ndbMysqld = new GenericContainer<>("mysql/mysql-cluster")
             .withNetwork(network)
             .withCommand("mysqld")
             .withCreateContainerCmdModifier(createContainerCmd -> createContainerCmd.withIpv4Address("192.168.0.10"))
@@ -61,16 +66,27 @@ abstract class AbstractIntegrationTest {
                     "/etc/my.cnf",
                     BindMode.READ_ONLY)
             .waitingFor(Wait.forListeningPort())
-            .withEnv(ImmutableMap.of("MYSQL_DATABASE", "NDB_DB",
-                    "MYSQL_USER", "sys",
-                    "MYSQL_PASSWORD", "qwerty"))
+            .withEnv(ImmutableMap.of("MYSQL_DATABASE", CLUSTERJ_DATABASE,
+                    "MYSQL_USER", MYSQL_USER,
+                    "MYSQL_PASSWORD", MYSQL_PASSWORD))
             .withExposedPorts(3306)
             .waitingFor(Wait.forListeningPort());
 
 
     static {
-        Stream.of(ndbMgmd, ndbd1, ndbMysqld)
-                //.parallel()
-                .forEach(GenericContainer::start);
+        System.out.println("Start MySQL Cluster testcontainers extension...\n");
+        Stream.of(ndbMgmd, ndbd1, ndbMysqld).forEach(GenericContainer::start);
+
+        String ndbUrl = ndbMgmd.getContainerIpAddress() + ":" + ndbMgmd.getMappedPort(1186);
+        String mysqlUrl = ndbMysqld.getContainerIpAddress() + ":" + ndbMysqld.getMappedPort(3306);
+        String mysqlConnectionString = "jdbc:mysql://" + mysqlUrl + "/" + CLUSTERJ_DATABASE + "?useUnicode=true" +
+                "&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false";
+
+        System.setProperty("clusterj.connectString", ndbUrl);
+        System.setProperty("clusterj.dataBaseName", CLUSTERJ_DATABASE);
+        System.setProperty("spring.datasource.username", MYSQL_USER);
+        System.setProperty("spring.datasource.password", MYSQL_PASSWORD);
+        System.setProperty("spring.datasource.url", mysqlConnectionString);
     }
+
 }
