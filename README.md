@@ -4,7 +4,7 @@
 Example for using `MySQL NDB Cluster` (via `ClusterJ` library) for test 
 with `TestContainers`
 
-* Install `docker` and `docker-compose` 1.24.0 or later
+* Install `docker`
 
 * Download `NDB ClusterJ (Java Connector for NDB)` library and install 
 it via package manager: https://dev.mysql.com/downloads/cluster/
