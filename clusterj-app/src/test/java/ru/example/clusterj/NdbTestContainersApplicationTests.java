@@ -1,4 +1,4 @@
-package ru.ndb.testcontainers;
+package ru.example.clusterj;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

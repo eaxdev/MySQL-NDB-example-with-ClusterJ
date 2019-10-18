@@ -1,4 +1,4 @@
-package ru.ndb.testcontainers.junit5;
+package ru.example.clusterj.junit5;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 

@@ -1,6 +1,5 @@
-package ru.ndb.testcontainers;
+package ru.example.clusterj;
 
-import com.mysql.clusterj.ClusterJHelper;
 import com.mysql.clusterj.Session;
 import com.mysql.clusterj.SessionFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,10 +10,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.ndb.testcontainers.junit5.EnableMySQLClusterContainer;
-import ru.ndb.testcontainers.model.User;
-
-import java.util.Properties;
+import ru.example.clusterj.junit5.EnableMySQLClusterContainer;
+import ru.example.clusterj.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,24 +26,21 @@ class NdbClusterJTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //-Djava.library.path=/usr/lib/x86_64-linux-gnu/
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    private Session session;
 
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS `user` (id INT NOT NULL PRIMARY KEY," +
                 "     firstName VARCHAR(64) DEFAULT NULL," +
                 "     lastName VARCHAR(64) DEFAULT NULL) ENGINE=NDBCLUSTER;");
+        session = sessionFactory.getSession();
     }
 
     @Test
     void shouldGetUserViaClusterJ() {
-        Properties props = new Properties();
-        props.put("com.mysql.clusterj.connectstring", System.getProperty("clusterj.connectString"));
-        props.put("com.mysql.clusterj.database", "NDB_DB");
-
-        SessionFactory factory = ClusterJHelper.getSessionFactory(props);
-        Session session = factory.getSession();
-
         User newUser = session.newInstance(User.class);
         newUser.setId(1);
         newUser.setFirstName("John");

@@ -1,6 +1,7 @@
-package ru.ndb.testcontainers.junit5;
+package ru.example.clusterj.junit5;
 
 import com.github.dockerjava.api.model.Network;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.Extension;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
@@ -10,6 +11,7 @@ import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 import java.time.Duration;
 import java.util.stream.Stream;
 
+@Slf4j
 class MySQLClusterTcExtension implements Extension {
 
     private static final String MYSQL_USER = "sys";
@@ -74,7 +76,7 @@ class MySQLClusterTcExtension implements Extension {
 
 
     static {
-        System.out.println("Start MySQL Cluster testcontainers extension...\n");
+        log.info("Start MySQL Cluster testcontainers extension...\n");
         Stream.of(ndbMgmd, ndbd1, ndbMysqld).forEach(GenericContainer::start);
 
         String ndbUrl = ndbMgmd.getContainerIpAddress() + ":" + ndbMgmd.getMappedPort(1186);

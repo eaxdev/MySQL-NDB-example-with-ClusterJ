@@ -1,4 +1,4 @@
-package ru.ndb.testcontainers.model;
+package ru.example.clusterj.model;
 
 import com.mysql.clusterj.annotation.Column;
 import com.mysql.clusterj.annotation.PersistenceCapable;
