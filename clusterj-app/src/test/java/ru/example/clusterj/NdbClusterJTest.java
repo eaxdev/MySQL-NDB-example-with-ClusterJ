@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -111,6 +112,35 @@ class NdbClusterJTest {
                         )
                 )
         );
+    }
+
+    @Test
+    void andOrNotImplemented() {
+        QueryBuilder builder = session.getQueryBuilder();
+        QueryDomainType<User> userQueryDomainType = builder.createQueryDefinition(User.class);
+
+        // parameter
+        PredicateOperand firstNameParam = userQueryDomainType.param("firstName");
+        // property
+        PredicateOperand firstName = userQueryDomainType.get("firstName");
+
+        // parameter
+        PredicateOperand lastNameParam = userQueryDomainType.param("lastName");
+        // property
+        PredicateOperand lastName = userQueryDomainType.get("lastName");
+
+        // parameter
+        PredicateOperand idParam = userQueryDomainType.param("id");
+        // property
+        PredicateOperand id = userQueryDomainType.get("id");
+
+        Executable executable = () -> userQueryDomainType.where(firstNameParam.equal(firstName)
+                .and(lastNameParam.equal(lastName))
+                .or(idParam.equal(id)));
+
+        UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class, executable);
+
+        assertEquals("Not implemented.", exception.getMessage());
     }
 
     @AfterEach

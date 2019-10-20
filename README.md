@@ -1,8 +1,15 @@
 [![Build Status](https://travis-ci.com/eaxdev/MySQL-NDB-example-with-ClusterJ.svg?branch=master)](https://travis-ci.com/eaxdev/MySQL-NDB-example-with-ClusterJ)
 
-# MySQL-NDB-with-TestContainers
-Example for using `MySQL NDB Cluster` (via `ClusterJ` library) for test 
-with `TestContainers`
+# MySQL-NDB-example-with-ClusterJ
+This is example for using `MySQL NDB Cluster` (via `ClusterJ` library).
+ 
+Using:
+* `SpringBoot`
+* `ClusterJ`
+* `TestContainers`
+* `JUnit5`
+
+Preparation for launch: 
 
 * Install `docker`
 
