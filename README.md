@@ -31,4 +31,4 @@ mvn -DargLine="-Djava.library.path=/usr/lib/x86_64-linux-gnu/" clean test
 
 when `/usr/lib/x86_64-linux-gnu/` path to `ndbclient_7.6.9.so`
 
-For example, see `.travis.yml` for more details.
+For example, see `.github/workflows/maven-ci-build.yml` for more details.
