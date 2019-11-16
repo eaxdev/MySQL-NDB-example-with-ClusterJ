@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches:
+    tags:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      -name: Preparing build
+       run: |
+         wget https://dev.mysql.com/get/Downloads/MySQL-Cluster-7.6/mysql-cluster-community-java_7.6.9-1ubuntu16.04_amd64.deb
+         sudo dpkg -i mysql-cluster-community-java_7.6.9-1ubuntu16.04_amd64.deb
+         mvn install:install-file -DgroupId=com.mysql.ndb -DartifactId=clusterj -Dversion=7.6.9 -Dpackaging=jar -Dfile=/usr/share/mysql/java/clusterj-7.6.9.jar -DgeneratePom=true
+         wget https://dev.mysql.com/get/Downloads/MySQL-Cluster-7.6/ndbclient_7.6.9-1ubuntu16.04_amd64.deb
+         sudo dpkg -i ndbclient_7.6.9-1ubuntu16.04_amd64.deb
+         sudo ln -s /usr/lib/x86_64-linux-gnu/libndbclient.so.6.1.0 /usr/lib/x86_64-linux-gnu/libndbclient.so
+
+      - name: Build with Maven
+        run: mvn -DargLine="-Djava.library.path=/usr/lib/x86_64-linux-gnu/" -B package --file pom.xml
