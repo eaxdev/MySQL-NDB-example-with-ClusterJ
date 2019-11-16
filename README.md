@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/eaxdev/MySQL-NDB-example-with-ClusterJ.svg?branch=master)](https://travis-ci.com/eaxdev/MySQL-NDB-example-with-ClusterJ)
+[![Build Status](https://github.com/eaxdev/MySQL-NDB-example-with-ClusterJ/workflows/build/badge.svg)](https://github.com/eaxdev/MySQL-NDB-example-with-ClusterJ/actions)
 
 # MySQL-NDB-example-with-ClusterJ
 This is example for using `MySQL NDB Cluster` (via `ClusterJ` library).
