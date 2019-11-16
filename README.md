@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/eaxdev/MySQL-NDB-example-with-ClusterJ.svg?branch=master)](https://travis-ci.com/eaxdev/MySQL-NDB-example-with-ClusterJ)
+[![Build Status](https://github.com/eaxdev/MySQL-NDB-example-with-ClusterJ/workflows/build/badge.svg)](https://github.com/eaxdev/MySQL-NDB-example-with-ClusterJ/actions)
 
 # MySQL-NDB-example-with-ClusterJ
 This is example for using `MySQL NDB Cluster` (via `ClusterJ` library).
@@ -31,4 +31,4 @@ mvn -DargLine="-Djava.library.path=/usr/lib/x86_64-linux-gnu/" clean test
 
 when `/usr/lib/x86_64-linux-gnu/` path to `ndbclient_7.6.9.so`
 
-For example, see `.travis.yml` for more details.
+For example, see `.github/workflows/maven-ci-build.yml` for more details.
