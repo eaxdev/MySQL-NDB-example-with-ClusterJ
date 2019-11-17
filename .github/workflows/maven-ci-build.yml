@@ -27,3 +27,8 @@ jobs:
 
       - name: Build with Maven
         run: mvn -DargLine="-Djava.library.path=/usr/lib/x86_64-linux-gnu/" -B package --file pom.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.0.3
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
