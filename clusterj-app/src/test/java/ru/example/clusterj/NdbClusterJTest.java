@@ -45,7 +45,7 @@ class NdbClusterJTest {
     void setUp() {
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS `user` (id INT NOT NULL PRIMARY KEY," +
                 "     firstName VARCHAR(64) DEFAULT NULL," +
-                "     lastName VARCHAR(64) DEFAULT NULL) ENGINE=NDBCLUSTER;");
+                "     lastName VARCHAR(64) DEFAULT NULL) ENGINE=NDB;");
         session = sessionFactory.getSession();
     }
 
@@ -61,9 +61,9 @@ class NdbClusterJTest {
         User userFromDb = session.find(User.class, 1);
 
         assertAll(
-                () -> assertEquals(userFromDb.getId(), 1),
-                () -> assertEquals(userFromDb.getFirstName(), "John"),
-                () -> assertEquals(userFromDb.getLastName(), "Jonson"));
+                () -> assertEquals(1, userFromDb.getId()),
+                () -> assertEquals("John", userFromDb.getFirstName()),
+                () -> assertEquals("Jonson", userFromDb.getLastName()));
     }
 
     @Test
