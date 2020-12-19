@@ -82,7 +82,7 @@ class MySQLClusterTcExtension implements Extension {
         String ndbUrl = ndbMgmd.getContainerIpAddress() + ":" + ndbMgmd.getMappedPort(1186);
         String mysqlUrl = ndbMysqld.getContainerIpAddress() + ":" + ndbMysqld.getMappedPort(3306);
         String mysqlConnectionString = "jdbc:mysql://" + mysqlUrl + "/" + CLUSTERJ_DATABASE + "?useUnicode=true" +
-                "&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false";
+                "&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true";
 
         System.setProperty("clusterj.connectString", ndbUrl);
         System.setProperty("clusterj.dataBaseName", CLUSTERJ_DATABASE);
