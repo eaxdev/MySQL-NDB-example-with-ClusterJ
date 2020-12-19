@@ -33,7 +33,7 @@ class MySQLClusterTcExtension implements Extension {
             .createNetworkCmdModifier(createNetworkCmd -> createNetworkCmd.withIpam(getIpam()))
             .build();
 
-    private static GenericContainer ndbMgmd = new GenericContainer<>("mysql/mysql-cluster")
+    private static GenericContainer ndbMgmd = new GenericContainer<>("mysql/mysql-cluster:8.0.22")
             .withNetwork(network)
             .withClasspathResourceMapping("mysql-cluster.cnf",
                     "/etc/mysql-cluster.cnf",
