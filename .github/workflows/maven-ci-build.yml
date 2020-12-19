@@ -20,7 +20,7 @@ jobs:
         run: |
           wget https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0.22/mysql-cluster-community-java_8.0.22-1ubuntu20.10_amd64.deb
           sudo dpkg -i mysql-cluster-community-java_8.0.22-1ubuntu20.10_amd64.deb
-          mvn install:install-file -DgroupId=com.mysql.ndb -DartifactId=clusterj -Dversion=8.0.22 -Dpackaging=jar -Dfile=/usr/share/mysql/java/clusterj-8.0.22.jar -DgeneratePom=true
+          mvn install:install-file -DgroupId=com.mysql.ndb -DartifactId=clusterj -Dversion=8.0.22 -Dpackaging=jar -Dfile=/usr/share/mysql-8.0/java/clusterj-8.0.22.jar -DgeneratePom=true
           wget https://dev.mysql.com/get/Downloads/MySQL-Cluster-8.0.22/ndbclient_8.0.22-1ubuntu20.10_amd64.deb
           sudo dpkg -i ndbclient_8.0.22-1ubuntu20.10_amd64.deb
           sudo ln -s /usr/lib/x86_64-linux-gnu/libndbclient.so.6.1.0 /usr/lib/x86_64-linux-gnu/libndbclient.so
