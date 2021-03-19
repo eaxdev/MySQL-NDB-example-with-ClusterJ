@@ -20,6 +20,8 @@ class MySQLClusterTcExtension implements Extension {
 
     private static final String CLUSTERJ_DATABASE = "NDB_DB";
 
+    private static final String IMAGE_NAME = "mysql/mysql-cluster:8.0.23";
+
     private static Network.Ipam getIpam() {
         Network.Ipam ipam = new Network.Ipam();
         ipam.withDriver("default");
@@ -33,7 +35,7 @@ class MySQLClusterTcExtension implements Extension {
             .createNetworkCmdModifier(createNetworkCmd -> createNetworkCmd.withIpam(getIpam()))
             .build();
 
-    private static GenericContainer ndbMgmd = new GenericContainer<>("mysql/mysql-cluster:7.6.16")
+    private static GenericContainer ndbMgmd = new GenericContainer<>(IMAGE_NAME)
             .withNetwork(network)
             .withClasspathResourceMapping("mysql-cluster.cnf",
                     "/etc/mysql-cluster.cnf",
@@ -46,7 +48,7 @@ class MySQLClusterTcExtension implements Extension {
             .withExposedPorts(1186)
             .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(150)));
 
-    private static GenericContainer ndbd1 = new GenericContainer<>("mysql/mysql-cluster")
+    private static GenericContainer ndbd1 = new GenericContainer<>(IMAGE_NAME)
             .withNetwork(network)
             .withClasspathResourceMapping("mysql-cluster.cnf",
                     "/etc/mysql-cluster.cnf",
@@ -57,7 +59,7 @@ class MySQLClusterTcExtension implements Extension {
             .withCreateContainerCmdModifier(createContainerCmd -> createContainerCmd.withIpv4Address("192.168.0.3"))
             .withCommand("ndbd");
 
-    private static GenericContainer ndbMysqld = new GenericContainer<>("mysql/mysql-cluster")
+    private static GenericContainer ndbMysqld = new GenericContainer<>(IMAGE_NAME)
             .withNetwork(network)
             .withCommand("mysqld")
             .withCreateContainerCmdModifier(createContainerCmd -> createContainerCmd.withIpv4Address("192.168.0.10"))
